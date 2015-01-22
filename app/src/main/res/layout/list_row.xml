@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/list_selector"
+    android:orientation="horizontal"
+    android:paddingLeft="5dip"
+    android:paddingRight="5dip"
+    android:paddingTop="10dip"
+    android:paddingBottom="10dip">
+
+
+    <TextView
+        android:id="@+id/productQuantity"
+        android:layout_width="40dip"
+        android:layout_height="wrap_content"
+        android:text="1"
+
+        android:textSize="16dip"/>
+
+    <TextView
+        android:id="@+id/productTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/productQuantity"
+        android:layout_toRightOf="@+id/productQuantity"
+        android:text="Product Title................................"
+        android:textColor="#000000"
+        android:typeface="sans"
+        android:textSize="16dip"/>
+
+    <TextView
+        android:id="@+id/productTotalPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/productTitle"
+        android:gravity="right"
+        android:text="100.00"
+        android:layout_marginRight="5dip"
+        android:textSize="16dip"
+        android:textColor="#000000"
+    />
+
+</RelativeLayout>

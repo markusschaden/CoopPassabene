@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="ch.avendia.passabene.ItemFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ListView android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/bottomBar"/>
+
+        <TextView android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/bottomBar"/>
+
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#99C13C"
+            android:padding="10dip"
+            android:id="@+id/bottomBar"
+            android:layout_alignParentBottom="true"
+            android:layout_weight="0">
+
+            <RelativeLayout
+                android:id="@+id/bottomBarLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|top"
+                android:background="#99C13C"
+                android:padding="10dip">
+
+                <TextView
+                    android:id="@+id/textTotalQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total"
+                    android:textColor="#ffffff"
+                    android:textSize="18dip"
+                    android:typeface="sans" />
+
+                <TextView
+                    android:id="@+id/totalQuantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="100 Artikel"
+                    android:textColor="#ffffff"
+                    android:textSize="14dip"
+                    android:layout_marginTop="22dip"/>
+
+
+                <TextView
+                    android:id="@+id/textTotalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="13dip"
+                    android:text="CHF"
+                    android:textColor="#ffffff"
+                    android:textSize="24dip"
+                    android:typeface="sans"
+                    android:paddingRight="10dip"
+                    android:layout_toLeftOf="@+id/totalPrice"
+                    />
+
+                <TextView
+                    android:id="@+id/totalPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:gravity="right"
+                    android:layout_alignParentRight="true"
+                    android:text="10000.50"
+                    android:textColor="#ffffff"
+                    android:textSize="35dip"
+                    android:textStyle="bold"/>
+
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/LinearLayout02"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="70dip">
+
+                <Button
+                    android:id="@+id/buttonScan"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dip"
+                    android:layout_weight="1"
+                    android:text="Scannen"
+                    android:textColor="#ffffff"
+                    android:background="#5E8800"
+                    android:layout_marginRight="4dip"
+                    />
+
+                <Button
+                    android:id="@+id/buttonToCounter"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dip"
+                    android:layout_weight="1"
+                    android:text="Zur Kasse"
+                    android:textColor="#ffffff"
+                    android:background="#5E8800"
+                    android:layout_marginLeft="4dip"
+                    />
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+ </RelativeLayout>
+
+
+</FrameLayout>
