@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Coop Passabene</string>
-    <string name="title_activity_main">Coop Passabene</string>
+    <string name="title_activity_main">passabene</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="title_section1">Main</string>
@@ -13,8 +13,7 @@
     <string name="action_example">Example action</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_detailitem">DetailitemActivity</string>
-
-
+    <string name="account_name">Passabene</string>
     <string name="scanner_fragment_activity">ZBar Scanner - Full Fragment Activity</string>
     <string name="simple_scanner_activity">ZBar Scanner - Simple Activity</string>
     <string name="simple_scanner_fragment_activity">ZBar Scanner - Simple Fragment Activity</string>
@@ -31,5 +30,6 @@
     <string name="choose_formats">Choose Formats</string>
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
+    <string name="title_activity_setup">SetupActivity</string>
 
 </resources>

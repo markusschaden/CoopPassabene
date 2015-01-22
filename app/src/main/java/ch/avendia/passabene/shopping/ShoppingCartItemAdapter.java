@@ -9,17 +9,18 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import ch.avendia.passabene.Constants;
 import ch.avendia.passabene.R;
+import ch.avendia.passabene.api.json.Item;
 
 /**
  * Created by Markus on 12.01.2015.
  */
-public class ShoppingCartItemAdapter extends ArrayAdapter<ShoppingCartItem> {
+public class ShoppingCartItemAdapter extends ArrayAdapter<Item> {
     private Context context;
-    private List<ShoppingCartItem> items;
-    private final String FORMAT_TWO_DIGITS = "%.2f"; // two digits
+    private List<Item> items;
 
-    public ShoppingCartItemAdapter(Context ctx, List<ShoppingCartItem> items) {
+    public ShoppingCartItemAdapter(Context ctx, List<Item> items) {
         super(ctx, R.layout.list_row, items);
         this.items = items;
         this.context = ctx;
@@ -38,11 +39,11 @@ public class ShoppingCartItemAdapter extends ArrayAdapter<ShoppingCartItem> {
         TextView quantityView = (TextView) convertView.findViewById(R.id.productQuantity);
         TextView titleView = (TextView) convertView.findViewById(R.id.productTitle);
         TextView priceView = (TextView) convertView.findViewById(R.id.productTotalPrice);
-        ShoppingCartItem p = items.get(position);
+        Item p = items.get(position);
 
         quantityView.setText("" + p.getQuantity());
-        titleView.setText(p.getProduct().getName());
-        priceView.setText(String.format(FORMAT_TWO_DIGITS, p.getProduct().getPrice() * p.getQuantity()));
+        titleView.setText(p.getDescription());
+        priceView.setText(String.format(Constants.FORMAT_TWO_DIGITS, p.getPrice() * p.getQuantity() / 100.0));
 
 
         return convertView;

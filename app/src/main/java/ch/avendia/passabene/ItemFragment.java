@@ -15,9 +15,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ch.avendia.passabene.shopping.Product;
+import ch.avendia.passabene.api.json.Item;
 import ch.avendia.passabene.shopping.ShoppingCardHolder;
-import ch.avendia.passabene.shopping.ShoppingCartItem;
 import ch.avendia.passabene.shopping.ShoppingCartItemAdapter;
 
 /**
@@ -54,16 +53,13 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
      * Views.
      */
     private ShoppingCartItemAdapter mAdapter;
-    private List<ShoppingCartItem> items = ShoppingCardHolder.shoppingCart;
     private TextView totalPriceTV;
     private TextView totalQuantityTV;
+    private ShoppingCardHolder shoppingCardHolder = new ShoppingCardHolder();
 
-    // TODO: Rename and change types of parameters
-    public static ItemFragment newInstance(String param1, String param2) {
+    public static ItemFragment newInstance() {
         ItemFragment fragment = new ItemFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -84,34 +80,17 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        items.add(new ShoppingCartItem(new Product("Test Produkt 1", 100.50)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 2", 55.0)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 3", 3200.0)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 1", 100.50)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 2", 55.0)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 3", 3200.0)));
 
-        items.add(new ShoppingCartItem(new Product("Test Produkt 1", 100.50)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 2", 55.0)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 3", 3200.0)));
-
-        items.add(new ShoppingCartItem(new Product("Test Produkt 1", 100.50)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 2", 55.0)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 3", 3200.0)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 1", 100.50)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 2", 55.0)));
-        items.add(new ShoppingCartItem(new Product("Test Produkt 10", 3200.0)));
-
-        mAdapter = new ShoppingCartItemAdapter(getActivity().getBaseContext(), items);
+        mAdapter = new ShoppingCartItemAdapter(getActivity().getBaseContext(), shoppingCardHolder.getShoppingCart());
 
     }
 
 
-    public void addBarcode(String barcode) {
+    /*public void addBarcode(String barcode) {
 
-        items.add(new ShoppingCartItem(new Product(barcode, 90.50)));
+        items.add(new Item(new Product(barcode, 90.50)));
         refresh();
-    }
+    }*/
 
     public void refresh() {
         if(mAdapter != null) {
@@ -123,10 +102,10 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
 
     public void calcTotalPrice() {
         double result = 0;
-        for (ShoppingCartItem item : items) {
-            result += (item.getQuantity() * item.getProduct().getPrice());
+        for (Item item : shoppingCardHolder.getShoppingCart()) {
+            result += (item.getQuantity() * item.getPrice());
         }
-        totalPrice = result;
+        totalPrice = result / 100.0;
         if(totalPriceTV != null) {
             totalPriceTV.setText(String.format(Constants.FORMAT_TWO_DIGITS, totalPrice));
         }
@@ -134,7 +113,7 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
 
     public void calcTotalQuantity() {
         int result = 0;
-        for (ShoppingCartItem item : items) {
+        for (Item item : shoppingCardHolder.getShoppingCart()) {
             result += item.getQuantity();
         }
         totalQuantity = result;
@@ -197,7 +176,7 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onItemClick(items.get(position).getProduct().getName());
+            //mListener.onItemClick(items.get(position).getDescription());
 
             Intent intent = new Intent(getActivity(), DetailitemActivity.class);
             intent.putExtra(MainActivity.ITEM_ID, position);

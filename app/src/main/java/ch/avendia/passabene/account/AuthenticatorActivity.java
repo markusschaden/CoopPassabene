@@ -7,18 +7,23 @@ package ch.avendia.passabene.account;
 import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ch.avendia.passabene.CustomTypefaceSpan;
 import ch.avendia.passabene.R;
 
 /**
@@ -84,7 +89,22 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
                 startActivityForResult(signup, REQ_SIGNUP);
             }
         });*/
+
+        restoreActionBar();
     }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = this.getActionBar();
+
+        Typeface coopRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopRg.ttf");
+        Typeface coopExpRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopExpRg.ttf");
+
+        SpannableString s = new SpannableString(getString(R.string.title_activity_main));
+        s.setSpan(new CustomTypefaceSpan(this, "CoopExpRg.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        actionBar.setTitle(s);
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -1,14 +1,14 @@
 package ch.avendia.passabene;
 
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.LayoutInflater;
@@ -16,17 +16,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.internal.de;
-
+import ch.avendia.passabene.api.AddItemApiCall;
+import ch.avendia.passabene.api.DeleteItemApiCall;
+import ch.avendia.passabene.api.PassabeneService;
+import ch.avendia.passabene.api.json.Item;
 import ch.avendia.passabene.shopping.ShoppingCardHolder;
-import ch.avendia.passabene.shopping.ShoppingCartItem;
-
 
 public class DetailitemActivity extends ActionBarActivity {
 
@@ -94,7 +92,7 @@ public class DetailitemActivity extends ActionBarActivity {
     public static class PlaceholderFragment extends Fragment {
 
         public PlaceholderFragment() {
-
+            shoppingCardHolder = new ShoppingCardHolder();
         }
 
         private TextView itemDetail;
@@ -102,12 +100,16 @@ public class DetailitemActivity extends ActionBarActivity {
         private Button incQuantityBtn;
         private Button decQuantityBtn;
         private ImageButton deleteImageBtn;
-        private ShoppingCartItem sci;
+        private Item sci;
         private TextView itemUnitPrice;
         private TextView itemTotalPrice;
         private Drawable quantityselector;
         private Drawable quantityButtonActive;
         private Drawable quantityButtonInactive;
+        private ShoppingCardHolder shoppingCardHolder;
+        private PassabeneService passabeneService = PassabeneService.getInstance();
+        private int itemId = 0;
+        private ProgressDialog progressDialog;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,44 +133,90 @@ public class DetailitemActivity extends ActionBarActivity {
             decQuantityBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setQuantity(-1);
+                    showLoading();
+
+                    new AsyncTask<String, Void, Intent>() {
+                        @Override
+                        protected Intent doInBackground(String... strings) {
+                            passabeneService.execute(new DeleteItemApiCall(sci.getBarcode(), 1));
+                            return null;
+                        }
+                        @Override
+                        protected void onPostExecute(Intent intent) {
+                            showItem();
+                            hideLoading();
+                        }
+                    }.execute();
                 }
             });
 
             incQuantityBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    setQuantity(1);
+                    showLoading();
+                    new AsyncTask<String, Void, Intent>() {
+                        @Override
+                        protected Intent doInBackground(String... strings) {
+                            passabeneService.execute(new AddItemApiCall(sci.getBarcode(), 1));
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Intent intent) {
+                            showItem();
+                            hideLoading();
+                        }
+                    }.execute();
                 }
             });
 
             deleteImageBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    ShoppingCardHolder.shoppingCart.remove(sci);
-                    getActivity().finish();
+                    showLoading();
+
+                    new AsyncTask<String, Void, Intent>() {
+                        @Override
+                        protected Intent doInBackground(String... strings) {
+                            passabeneService.execute(new DeleteItemApiCall(sci.getBarcode(), sci.getQuantity()));
+
+                            return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Intent intent) {
+                            hideLoading();
+                            //shoppingCardHolder.getShoppingCart().remove(sci);
+                            getActivity().finish();
+                        }
+                    }.execute();
                 }
+
             });
 
-            sci = ShoppingCardHolder.shoppingCart.get(getArguments().getInt("ID"));
-            showItem(sci);
+            itemId = getArguments().getInt("ID");
+            showItem();
 
             return rootView;
         }
 
-        private void setQuantity(int addQuantity) {
-            if(sci.getQuantity() + addQuantity >= 1) {
-                sci.setQuantity(sci.getQuantity() + addQuantity);
-                showItem(sci);
-            }
+        private void hideLoading() {
+            progressDialog.hide();
         }
 
-        public void showItem(ShoppingCartItem sci) {
-            itemDetail.setText(sci.getProduct().getName());
-            itemTotalPrice.setText(String.format(Constants.FORMAT_TWO_DIGITS, sci.getQuantity() * sci.getProduct().getPrice()));
+        private void showLoading() {
+            progressDialog = ProgressDialog.show(getActivity(), "Update", "Please Wait ...", true);
+        }
+
+
+        public void showItem() {
+            sci = shoppingCardHolder.getItemFromId(itemId);
+
+            itemDetail.setText(sci.getDescription());
+            itemTotalPrice.setText(String.format(Constants.FORMAT_TWO_DIGITS, sci.getQuantity() * sci.getPrice() / 100.0));
 
             if(sci.getQuantity() >= 2) {
-                itemUnitPrice.setText("Stück " + String.format(Constants.FORMAT_TWO_DIGITS, sci.getProduct().getPrice()));
+                itemUnitPrice.setText("Stück " + String.format(Constants.FORMAT_TWO_DIGITS, sci.getPrice() / 100.0));
                 itemQuantityTV.setBackground(quantityselector);
                 itemQuantityTV.setText(""+sci.getQuantity());
                 decQuantityBtn.setBackground(quantityButtonActive);

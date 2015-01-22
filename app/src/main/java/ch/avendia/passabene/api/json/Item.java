@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Item {
 
@@ -40,6 +41,18 @@ public class Item {
     private Integer MultiPackCount;
     @Expose
     private Boolean IsVisible;
+
+    public Item() {
+
+    }
+
+    Random random = new Random();
+    public Item(String barcode, Integer price) {
+        this.setBarcode("00"+random.nextInt());
+        this.setDescription(barcode);
+        this.setPrice(price);
+        this.setQuantity(1);
+    }
 
     /**
      * 

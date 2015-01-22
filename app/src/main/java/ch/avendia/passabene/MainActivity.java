@@ -24,12 +24,14 @@ import ch.avendia.passabene.account.AccountGeneral;
 import ch.avendia.passabene.account.AuthenticatorActivity;
 import ch.avendia.passabene.account.PassabeneAccount;
 import ch.avendia.passabene.account.PassabeneAccountManager;
+import ch.avendia.passabene.api.AddItemApiCall;
+import ch.avendia.passabene.api.PassabeneService;
 import ch.avendia.passabene.barcodezbar.sample.SimpleScannerFragmentActivity;
 import ch.avendia.passabene.wifi.CoopWifiManager;
 
 
 public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, LoginFragment.OnLoginFragmentInteractionListener, ItemFragment.ItemFragmentListener {
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ItemFragment.ItemFragmentListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -48,6 +50,7 @@ public class MainActivity extends ActionBarActivity
     private boolean loggedIn = false;
     private ItemFragment itemFragment;
     private final String TITLE_PASSABENE = "passabene";
+    private PassabeneService passabeneService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,9 +63,11 @@ public class MainActivity extends ActionBarActivity
         WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         CoopWifiManager coopWifiManager = new CoopWifiManager(wifi);
 
+        passabeneService = passabeneService.getInstance();
+
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        itemFragment = ItemFragment.newInstance("test","test");
+        itemFragment = ItemFragment.newInstance();
 
         PassabeneAccountManager passabeneAccountManager = new PassabeneAccountManager();
         PassabeneAccount account = passabeneAccountManager.getAccount(this.getBaseContext());
@@ -75,24 +80,22 @@ public class MainActivity extends ActionBarActivity
             intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, AccountGeneral.ACCOUNT_TYPE);
             intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true);
             startActivityForResult(intent, LOGIN_INTENT_ID);
-            //mTitle = getTitle();
-            //createSidebar();
-
-
-        } else {
-            //mTitle = "Login";
-            /*LoginFragment loginFragment = LoginFragment.newInstance("test","test");
-            fragmentManager.beginTransaction()
-                    .replace(R.id.container, loginFragment)
-                    .commit();
-
-            restoreActionBar();*/
-
-
-
 
         }
-        onSuccess();
+
+
+
+
+
+
+
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, itemFragment)
+                .commit();
+
+        restoreActionBar();
+
+
     }
 
     private void createSidebar() {
@@ -135,12 +138,10 @@ public class MainActivity extends ActionBarActivity
         Typeface coopRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopRg.ttf");
         Typeface coopExpRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopExpRg.ttf");
 
-        SpannableString s = new SpannableString(mTitle);
+        SpannableString s = new SpannableString(getString(R.string.title_activity_main));
         s.setSpan(new CustomTypefaceSpan(this, "CoopExpRg.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         actionBar.setTitle(s);
-
-
     }
 
 
@@ -190,30 +191,24 @@ public class MainActivity extends ActionBarActivity
                     String barcode = data.getStringExtra(BARCODE_RESULT_DATA);
                     // TODO Update your TextView.
                     Toast.makeText(this, "Barcode: " + barcode, Toast.LENGTH_SHORT).show();
-                    itemFragment.addBarcode(barcode);
 
+                    passabeneService.execute(new AddItemApiCall(barcode,1));
                 }
                 break;
             }
 
             case LOGIN_INTENT_ID:
-
+                if (resultCode == Activity.RESULT_OK) {
+                    Intent setupIntent = new Intent(this, SetupActivity.class);
+                    //TODO: setup und store auswahl
+                    //startActivityForResult(setupIntent, 130);
+                } else {
+                    //Exit app
+                }
                 break;
         }
     }
 
-
-    @Override
-    public void onSuccess() {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, itemFragment)
-                .commit();
-
-        restoreActionBar();
-        //createSidebar();
-        loggedIn = true;
-    }
 
     @Override
     public void onScanClick() {

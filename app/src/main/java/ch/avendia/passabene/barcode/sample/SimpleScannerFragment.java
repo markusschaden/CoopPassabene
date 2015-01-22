@@ -8,21 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.zxing.Result;
 
+import ch.avendia.passabene.Constants;
 import ch.avendia.passabene.MainActivity;
 import ch.avendia.passabene.R;
+import ch.avendia.passabene.api.json.Item;
 import ch.avendia.passabene.barcode.ZXingScannerView;
 import ch.avendia.passabene.shopping.ShoppingCardHolder;
-import ch.avendia.passabene.shopping.ShoppingCartItem;
 
 public class SimpleScannerFragment extends Fragment implements ZXingScannerView.ResultHandler {
     private ZXingScannerView mScannerView;
     private TextView barcodeViewTotalQuantity;
     private TextView barcodeViewTotalPrice;
-    private final String FORMAT_TWO_DIGITS = "%.2f";
+    private ShoppingCardHolder shoppingCardHolder = new ShoppingCardHolder();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -34,22 +34,24 @@ public class SimpleScannerFragment extends Fragment implements ZXingScannerView.
         calcTotalPrice();
         calcTotalQuantity();
 
+
+
         return mScannerView;
     }
 
     public void calcTotalPrice() {
         double result = 0;
-        for (ShoppingCartItem item : ShoppingCardHolder.shoppingCart) {
-            result += (item.getQuantity() * item.getProduct().getPrice());
+        for (Item item : shoppingCardHolder.getShoppingCart()) {
+            result += (item.getQuantity() * item.getPrice() / 100);
         }
         if(barcodeViewTotalPrice != null) {
-            barcodeViewTotalPrice.setText(String.format(FORMAT_TWO_DIGITS, result));
+            barcodeViewTotalPrice.setText(String.format(Constants.FORMAT_TWO_DIGITS, result));
         }
     }
 
     public void calcTotalQuantity() {
         int result = 0;
-        for (ShoppingCartItem item : ShoppingCardHolder.shoppingCart) {
+        for (Item item : shoppingCardHolder.getShoppingCart()) {
             result += item.getQuantity();
         }
         if(barcodeViewTotalQuantity != null) {
