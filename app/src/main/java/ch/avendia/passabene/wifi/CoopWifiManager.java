@@ -53,6 +53,11 @@ public class CoopWifiManager {
         boolean enabled = wifiManager.enableNetwork(res, true);
     }
 
+
+    public void removeWifi() {
+
+    }
+
     public void checkWifi() {
 
     }

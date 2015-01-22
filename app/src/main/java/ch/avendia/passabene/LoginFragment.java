@@ -129,7 +129,7 @@ public class LoginFragment extends Fragment {
                         coopWifiManager.addWifi(username, password);
                         String token = PassabeneService.getToken();
                         if (mListener != null) {
-                            mListener.onSuccess(token);
+                            mListener.onSuccess();
                         }
                     } else {
                         progressDialog.hide();
@@ -173,7 +173,7 @@ public class LoginFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnLoginFragmentInteractionListener {
-        public void onSuccess(String token);
+        public void onSuccess();
     }
 
 }

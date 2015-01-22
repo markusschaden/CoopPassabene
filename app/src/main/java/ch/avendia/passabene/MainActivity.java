@@ -20,6 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import ch.avendia.passabene.account.AccountGeneral;
+import ch.avendia.passabene.account.AuthenticatorActivity;
+import ch.avendia.passabene.account.PassabeneAccount;
+import ch.avendia.passabene.account.PassabeneAccountManager;
 import ch.avendia.passabene.barcodezbar.sample.SimpleScannerFragmentActivity;
 import ch.avendia.passabene.wifi.CoopWifiManager;
 
@@ -33,6 +37,7 @@ public class MainActivity extends ActionBarActivity
     public static final String BARCODE_RESULT_DATA = "barcode";
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private static final int BARCODE_INTENT_ID = 10;
+    private static final int LOGIN_INTENT_ID = 120;
     public static final String ITEM_ID = "item_id";
 
 
@@ -59,22 +64,35 @@ public class MainActivity extends ActionBarActivity
         FragmentManager fragmentManager = getSupportFragmentManager();
         itemFragment = ItemFragment.newInstance("test","test");
 
+        PassabeneAccountManager passabeneAccountManager = new PassabeneAccountManager();
+        PassabeneAccount account = passabeneAccountManager.getAccount(this.getBaseContext());
+
+
         mTitle = TITLE_PASSABENE;
-        if(loggedIn) {
+        if(account == null) {
+
+            Intent intent = new Intent(this, AuthenticatorActivity.class);
+            intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, AccountGeneral.ACCOUNT_TYPE);
+            intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true);
+            startActivityForResult(intent, LOGIN_INTENT_ID);
             //mTitle = getTitle();
             //createSidebar();
 
 
         } else {
             //mTitle = "Login";
-            LoginFragment loginFragment = LoginFragment.newInstance("test","test");
+            /*LoginFragment loginFragment = LoginFragment.newInstance("test","test");
             fragmentManager.beginTransaction()
                     .replace(R.id.container, loginFragment)
                     .commit();
 
-            restoreActionBar();
-        }
+            restoreActionBar();*/
 
+
+
+
+        }
+        onSuccess();
     }
 
     private void createSidebar() {
@@ -177,12 +195,16 @@ public class MainActivity extends ActionBarActivity
                 }
                 break;
             }
+
+            case LOGIN_INTENT_ID:
+
+                break;
         }
     }
 
 
     @Override
-    public void onSuccess(String token) {
+    public void onSuccess() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.container, itemFragment)

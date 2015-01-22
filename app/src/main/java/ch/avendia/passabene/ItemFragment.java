@@ -41,7 +41,6 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
     private String mParam2;
 
     private ItemFragmentListener mListener;
-    private final String FORMAT_TWO_DIGITS = "%.2f"; // two digits
     private double totalPrice = 0;
     private int totalQuantity = 0;
 
@@ -129,7 +128,7 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
         }
         totalPrice = result;
         if(totalPriceTV != null) {
-            totalPriceTV.setText(String.format(FORMAT_TWO_DIGITS, totalPrice));
+            totalPriceTV.setText(String.format(Constants.FORMAT_TWO_DIGITS, totalPrice));
         }
     }
 

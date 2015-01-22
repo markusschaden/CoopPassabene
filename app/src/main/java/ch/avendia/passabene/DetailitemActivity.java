@@ -109,8 +109,6 @@ public class DetailitemActivity extends ActionBarActivity {
         private Drawable quantityButtonActive;
         private Drawable quantityButtonInactive;
 
-        private final String FORMAT_TWO_DIGITS = "%.2f";
-
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -167,10 +165,10 @@ public class DetailitemActivity extends ActionBarActivity {
 
         public void showItem(ShoppingCartItem sci) {
             itemDetail.setText(sci.getProduct().getName());
-            itemTotalPrice.setText(String.format(FORMAT_TWO_DIGITS, sci.getQuantity() * sci.getProduct().getPrice()));
+            itemTotalPrice.setText(String.format(Constants.FORMAT_TWO_DIGITS, sci.getQuantity() * sci.getProduct().getPrice()));
 
             if(sci.getQuantity() >= 2) {
-                itemUnitPrice.setText("Stück " + String.format(FORMAT_TWO_DIGITS, sci.getProduct().getPrice()));
+                itemUnitPrice.setText("Stück " + String.format(Constants.FORMAT_TWO_DIGITS, sci.getProduct().getPrice()));
                 itemQuantityTV.setBackground(quantityselector);
                 itemQuantityTV.setText(""+sci.getQuantity());
                 decQuantityBtn.setBackground(quantityButtonActive);
