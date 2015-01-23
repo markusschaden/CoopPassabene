@@ -39,12 +39,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".barcodezbar.sample.SimpleScannerActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".barcodezbar.sample.SimpleScannerFragmentActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".DetailitemActivity"
             android:label="@string/title_activity_detailitem"
@@ -53,14 +48,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ch.avendia.passabene.MainActivity" />
 
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".account.AuthenticatorActivity"
+            android:label="passabene" />
+
+        <activity
+            android:name=".scandit.ScanditActivity"
             android:label="passabene" />
 
         <service android:name=".account.PassabeneAuthenticatorService" >

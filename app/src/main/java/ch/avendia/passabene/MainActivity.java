@@ -26,7 +26,7 @@ import ch.avendia.passabene.account.PassabeneAccount;
 import ch.avendia.passabene.account.PassabeneAccountManager;
 import ch.avendia.passabene.api.AddItemApiCall;
 import ch.avendia.passabene.api.PassabeneService;
-import ch.avendia.passabene.barcodezbar.sample.SimpleScannerFragmentActivity;
+import ch.avendia.passabene.scandit.ScanditActivity;
 import ch.avendia.passabene.wifi.CoopWifiManager;
 
 
@@ -82,11 +82,6 @@ public class MainActivity extends ActionBarActivity
             startActivityForResult(intent, LOGIN_INTENT_ID);
 
         }
-
-
-
-
-
 
 
         fragmentManager.beginTransaction()
@@ -213,8 +208,12 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onScanClick() {
         //Intent intent = new Intent(this, SimpleScannerActivity.class);
-        Intent intent = new Intent(this, SimpleScannerFragmentActivity.class);
-        this.startActivityForResult(intent, BARCODE_INTENT_ID);
+        //Intent intent = new Intent(this, SimpleScannerFragmentActivity.class);
+        //this.startActivityForResult(intent, BARCODE_INTENT_ID);
+
+        Intent scanIntent = new Intent(this, ScanditActivity.class);
+        startActivityForResult(scanIntent, BARCODE_INTENT_ID);
+
     }
 
     @Override
