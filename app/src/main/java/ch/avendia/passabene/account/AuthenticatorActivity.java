@@ -24,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import ch.avendia.passabene.CustomTypefaceSpan;
+import ch.avendia.passabene.MainActivity;
 import ch.avendia.passabene.R;
 
 /**
@@ -43,6 +44,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     public final static String ARG_AUTH_TYPE = "AUTH_TYPE";
     public final static String ARG_ACCOUNT_NAME = "ACCOUNT_NAME";
     public final static String ARG_IS_ADDING_NEW_ACCOUNT = "IS_ADDING_ACCOUNT";
+    public final static String ARG_START_FROM_APP = "IS_START_FROM_APP";
 
     public static final String KEY_ERROR_MESSAGE = "ERR_MSG";
 
@@ -232,6 +234,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
         setAccountAuthenticatorResult(intent.getExtras());
         setResult(RESULT_OK, intent);
+
+        if (getIntent().getBooleanExtra(ARG_START_FROM_APP, false)) {
+            Intent mainIntent = new Intent(this, MainActivity.class);
+            startActivity(mainIntent);
+        }
+
         finish();
     }
 }

@@ -3,14 +3,24 @@ package ch.avendia.passabene.wifi;
 import android.content.Context;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiEnterpriseConfig;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.util.Log;
+
+import java.util.List;
+
+import ch.avendia.passabene.Constants;
+import ch.avendia.passabene.network.Sender;
 
 /**
  * Created by Markus on 11.01.2015.
  */
 public class CoopWifiManager {
 
+    public final static String SSID_PASSABENE = "passabene";
+
     private WifiManager wifiManager;
+
     public CoopWifiManager(WifiManager wifiManager) {
         this.wifiManager = wifiManager;
 
@@ -18,7 +28,7 @@ public class CoopWifiManager {
 
     public void addWifi(String username, String password) {
         WifiConfiguration configuration = new WifiConfiguration();
-        configuration.SSID = "\"" + "passabene" + "\"";
+        configuration.SSID = "\"" + SSID_PASSABENE + "\"";
         configuration.priority = 40;
         configuration.allowedKeyManagement.clear();
         configuration.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.IEEE8021X);
@@ -63,6 +73,33 @@ public class CoopWifiManager {
     }
 
     public void connectToCoopWifi() {
+        wifiManager.setWifiEnabled(true);
+
+        List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+        for (WifiConfiguration i : list) {
+            Log.i(Constants.TAG, i.SSID);
+            if (i.SSID != null && i.SSID.equals("\"" + "5237 2614" + "\"")) {
+                //if(i.SSID != null && i.SSID.equals("\"" + SSID_PASSABENE + "\"")) {
+                //only if not right network
+                WifiInfo currentWifi = wifiManager.getConnectionInfo();
+                if (currentWifi != null) {
+                    if (currentWifi.getSSID() != null) {
+                        if ("5237 2614".equals(currentWifi.getSSID())) {
+                            break;
+                        }
+                    }
+                }
+
+                wifiManager.disconnect();
+                wifiManager.enableNetwork(i.networkId, true);
+                wifiManager.reconnect();
+
+                break;
+            }
+        }
+
+        //TODO: add network to list again
 
     }
+
 }

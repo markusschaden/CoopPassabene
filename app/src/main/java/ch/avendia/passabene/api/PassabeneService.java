@@ -1,11 +1,15 @@
 package ch.avendia.passabene.api;
 
+import android.content.Context;
+import android.text.TextUtils;
+
 import java.io.IOException;
 
 import ch.avendia.passabene.PassabeneSettings;
 import ch.avendia.passabene.api.json.DTO;
 import ch.avendia.passabene.api.json.Item;
 import ch.avendia.passabene.api.json.Session;
+import ch.avendia.passabene.network.Sender;
 import ch.avendia.passabene.shopping.ShoppingCardHolder;
 
 /**
@@ -15,7 +19,6 @@ public class PassabeneService {
 
     private static PassabeneService instance;
     private final String BASE_URL = "http://smartphopb.coop.ch/SelfScanWebService/SelfScanAPI.mdc/";
-    private RequestHandlerPassabene requestHandler;
     private String sessionId;
     private PassabeneSettings settings;
     private Session session;
@@ -23,7 +26,6 @@ public class PassabeneService {
     private boolean catalogAvailable = true;
 
     private PassabeneService() {
-        requestHandler = new RequestHandlerPassabene();
         //TODO: load from file
         settings = new PassabeneSettings();
     }
@@ -99,29 +101,37 @@ public class PassabeneService {
 
     }
 
-
-    public DTO getStoreNumber(double lat, double lon) {
-        String url = "GetStoreNumber?geoLocation=%2B{0}%3A%2B{1}";
-
-        return requestHandler.sendGetRequest(BASE_URL + url);
+    public DTO executeWithResult(BasicApiCall apiCall) {
+        return apiCall.execute();
     }
+
+    public String getStoreNumber(double lat, double lon) {
+        DTO dto = executeWithResult(new GetStoreApiCall(lat, lon));
+        if(dto != null) {
+            return dto.getText();
+        }
+        return "6258";
+        //return null;
+    }
+
 
     public DTO getStatus() {
-        String url = "GetStatus?appVersion=2.0.0";
-
-        return requestHandler.sendGetRequest(BASE_URL + url);
+        return executeWithResult(new GetStatusApiCall());
     }
 
-    public void logMessage(String message) throws IOException {
+    public boolean isConnected() {
+        return !TextUtils.equals(null, new Sender().sendGet("http://www.avendia.ch"));
+    }
+
+
+    /*public void logMessage(String message) throws IOException {
         String url = "LogMessage?sessionId={0}";
 
         requestHandler.sendPostRequest(BASE_URL + url, message);
-    }
+    }*/
 
-    public void downloadCatalog() {
-        if(session != null) {
-            requestHandler.downloadFile("DATABASE-" + session.getStoreLocation() + ".sqlite", session.getDatabaseUrl());
-        }
+    public boolean downloadCatalog(Context context) {
+        return new DownloadProductCatalogApiCall(context).execute(session);
     }
 
     @Deprecated

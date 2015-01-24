@@ -2,24 +2,21 @@ package ch.avendia.passabene.api;
 
 import com.google.zxing.common.StringUtils;
 
+import ch.avendia.passabene.network.Sender;
+
 /**
  * Created by Markus on 14.01.2015.
  */
 public class AuthenticationService {
 
-    private RequestHandler requestHandler;
-
-    public AuthenticationService() {
-
-    }
+    private Sender sender = new Sender();
 
     public boolean authenticate(String username, String password) {
 
-        requestHandler = new RequestHandler();
         String url = "https://soaentry.coop.ch/passabene/ws/authenticate";
-        String values = "SupercardNumber={0}&SupercardPin={1}";
+        String values = "SupercardNumber="+username+"&SupercardPin="+password;
 
-        String result = requestHandler.sendPostRequest(url, values);
+        String result = sender.sendPost(url, values);
         if(result != null && !result.equals("") && result.startsWith("<Return>")) {
             return true;
         }

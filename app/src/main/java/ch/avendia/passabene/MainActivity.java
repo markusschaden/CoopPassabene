@@ -1,10 +1,8 @@
 package ch.avendia.passabene;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -27,7 +25,6 @@ import ch.avendia.passabene.account.PassabeneAccountManager;
 import ch.avendia.passabene.api.AddItemApiCall;
 import ch.avendia.passabene.api.PassabeneService;
 import ch.avendia.passabene.scandit.ScanditActivity;
-import ch.avendia.passabene.wifi.CoopWifiManager;
 
 
 public class MainActivity extends ActionBarActivity
@@ -39,8 +36,11 @@ public class MainActivity extends ActionBarActivity
     public static final String BARCODE_RESULT_DATA = "barcode";
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private static final int BARCODE_INTENT_ID = 10;
+    private static final int SETUP_INTENT_ID = 11;
     private static final int LOGIN_INTENT_ID = 120;
     public static final String ITEM_ID = "item_id";
+    public static final String SETUP_FINISHED = "SETUP_FINISHED";
+    public static final String CATALOG_AVAILABLE = "CATALOG_AVAILABLE";
 
 
     /**
@@ -51,6 +51,7 @@ public class MainActivity extends ActionBarActivity
     private ItemFragment itemFragment;
     private final String TITLE_PASSABENE = "passabene";
     private PassabeneService passabeneService;
+    private boolean setup_finished = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +60,6 @@ public class MainActivity extends ActionBarActivity
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        CoopWifiManager coopWifiManager = new CoopWifiManager(wifi);
 
         passabeneService = passabeneService.getInstance();
 
@@ -72,15 +70,14 @@ public class MainActivity extends ActionBarActivity
         PassabeneAccountManager passabeneAccountManager = new PassabeneAccountManager();
         PassabeneAccount account = passabeneAccountManager.getAccount(this.getBaseContext());
 
-
-        mTitle = TITLE_PASSABENE;
-        if(account == null) {
+        if (account == null) {
 
             Intent intent = new Intent(this, AuthenticatorActivity.class);
             intent.putExtra(AuthenticatorActivity.ARG_ACCOUNT_TYPE, AccountGeneral.ACCOUNT_TYPE);
             intent.putExtra(AuthenticatorActivity.ARG_IS_ADDING_NEW_ACCOUNT, true);
+            intent.putExtra(AuthenticatorActivity.ARG_START_FROM_APP, true);
             startActivityForResult(intent, LOGIN_INTENT_ID);
-
+            finish();
         }
 
 
@@ -90,6 +87,10 @@ public class MainActivity extends ActionBarActivity
 
         restoreActionBar();
 
+        if(!setup_finished) {
+            Intent intent = new Intent(this, SetupActivity.class);
+            startActivityForResult(intent, SETUP_INTENT_ID);
+        }
 
     }
 
@@ -180,14 +181,14 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode) {
-            case (BARCODE_INTENT_ID) : {
+        switch (requestCode) {
+            case (BARCODE_INTENT_ID): {
                 if (resultCode == Activity.RESULT_OK) {
                     String barcode = data.getStringExtra(BARCODE_RESULT_DATA);
                     // TODO Update your TextView.
                     Toast.makeText(this, "Barcode: " + barcode, Toast.LENGTH_SHORT).show();
 
-                    passabeneService.execute(new AddItemApiCall(barcode,1));
+                    passabeneService.execute(new AddItemApiCall(barcode, 1));
                 }
                 break;
             }
@@ -196,10 +197,22 @@ public class MainActivity extends ActionBarActivity
                 if (resultCode == Activity.RESULT_OK) {
                     Intent setupIntent = new Intent(this, SetupActivity.class);
                     //TODO: setup und store auswahl
-                    //startActivityForResult(setupIntent, 130);
+                    startActivityForResult(setupIntent, SETUP_INTENT_ID);
                 } else {
                     //Exit app
                 }
+                break;
+
+            case SETUP_INTENT_ID:
+                if (resultCode == Activity.RESULT_OK) {
+                    setup_finished = data.getBooleanExtra(SETUP_FINISHED, false);
+                    Toast.makeText(this, "Setup: " + setup_finished, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Catalog: " + data.getBooleanExtra(CATALOG_AVAILABLE, false), Toast.LENGTH_SHORT).show();
+                } else {
+                    //exit app
+                    finish();
+                }
+
                 break;
         }
     }
@@ -260,7 +273,6 @@ public class MainActivity extends ActionBarActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
-
 
 
 }

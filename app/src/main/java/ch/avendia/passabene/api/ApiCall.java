@@ -12,7 +12,8 @@ import ch.avendia.passabene.shopping.ShoppingCardHolder;
  */
 public abstract class ApiCall {
 
-    protected final String BASE_URL = "http://smartphopb.coop.ch/SelfScanWebService/SelfScanAPI.mdc/";
+    //protected final String BASE_URL = "http://smartphopb.coop.ch/SelfScanWebService/SelfScanAPI.mdc/";
+    protected final String BASE_URL = "http://avendia.ch/SelfScanWebService/SelfScanAPI.mdc/";
 
     protected Sender sender = new Sender();
     private static Gson gson  = new Gson();
