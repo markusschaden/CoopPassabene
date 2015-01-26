@@ -24,6 +24,7 @@ public class PassabeneService {
     private Session session;
     private ShoppingCardHolder shoppingCardHolder = new ShoppingCardHolder();
     private boolean catalogAvailable = true;
+    private boolean connected = false;
 
     private PassabeneService() {
         //TODO: load from file
@@ -120,7 +121,12 @@ public class PassabeneService {
     }
 
     public boolean isConnected() {
-        return !TextUtils.equals(null, new Sender().sendGet("http://www.avendia.ch"));
+        connected=!TextUtils.equals(null, new Sender().sendGet("http://www.avendia.ch"));
+        return connected;
+    }
+
+    public boolean isReady() {
+        return connected;
     }
 
 

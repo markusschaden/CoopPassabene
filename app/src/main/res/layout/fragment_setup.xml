@@ -1,15 +1,125 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="ch.avendia.passabene.SetupActivity$PlaceholderFragment">
 
-
-    <TextView
+    <ImageView
+        android:id="@+id/setup_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="1. Connect Wifi to Passabene, 2. Connected, 3. Scan Store or GPS"/>
+        android:layout_marginBottom="10dip"
+        android:adjustViewBounds="true"
+        android:scaleType="centerInside"
+        android:src="@drawable/retail_be_bern_wankdorf_2913" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:text="Willkommen im Coop Wankdorf"
+        android:textColor="#ffffff"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/setup_header"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="ch.avendia.passabene.SetupActivity$PlaceholderFragment">
+
+
+        <TextView
+            android:id="@+id/circle_1"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:shadowColor="@android:color/white"
+            android:shadowRadius="10.0"
+            android:text="1"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/circle_1"
+            android:layout_toRightOf="@+id/circle_1"
+            android:paddingTop="15dp"
+            android:text="Connecting to Wifi Passabene" />
+
+        <TextView
+            android:id="@+id/circle_2"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/circle_1"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:shadowColor="@android:color/white"
+            android:shadowRadius="10.0"
+            android:text="2"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            />
+
+
+        <TextView
+            android:id="@+id/circle_2_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/circle_2"
+            android:layout_toRightOf="@+id/circle_2"
+            android:paddingTop="15dp"
+            android:text="Locating Store..." />
+
+        <ImageView
+            android:id="@+id/qr_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@id/circle_1"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/barcode_qr"
+            android:adjustViewBounds="true"
+            android:layout_alignParentRight="true"
+            />
+
+        <TextView
+            android:id="@+id/circle_3"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_below="@+id/circle_2"
+            android:layout_gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:shadowColor="@android:color/white"
+            android:shadowRadius="10.0"
+            android:text="3"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/circle_3"
+            android:layout_toRightOf="@+id/circle_3"
+            android:paddingTop="15dp"
+            android:text="Preparing Catalog" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

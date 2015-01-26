@@ -64,6 +64,7 @@ public class ScanditActivity extends Activity implements ScanditSDKListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         restoreActionBar();
+
         // Initialize and start the bar code recognition.
         initializeAndStartBarcodeScanning();
 
@@ -125,6 +126,14 @@ public class ScanditActivity extends Activity implements ScanditSDKListener {
 
         RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.scanner_fragment);
         mainLayout.addView(picker);
+
+        Bundle extras = getIntent().getExtras();
+        RelativeLayout r = (RelativeLayout)findViewById(R.id.bottomBar);
+        if(extras.getBoolean(Constants.SHOW_SHOPPINGCART, false)) {
+            r.setVisibility(View.VISIBLE);
+        } else {
+            r.setVisibility(View.GONE);
+        }
 
 
         // Add both views to activity, with the scan GUI on top.

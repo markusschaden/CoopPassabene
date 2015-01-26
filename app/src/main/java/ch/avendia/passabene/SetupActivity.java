@@ -12,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,7 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.os.Build;
 
+import ch.avendia.passabene.account.PassabeneAccount;
+import ch.avendia.passabene.account.PassabeneAccountManager;
 import ch.avendia.passabene.api.PassabeneService;
+import ch.avendia.passabene.exception.SSIDNotFoundException;
 import ch.avendia.passabene.gps.GpsProvider;
 import ch.avendia.passabene.wifi.CoopWifiManager;
 
@@ -59,7 +63,17 @@ public class SetupActivity extends ActionBarActivity {
             @Override
             protected Intent doInBackground(String[] objects) {
                 Bundle data = new Bundle();
-                coopWifiManager.connectToCoopWifi();
+                try {
+                    coopWifiManager.connectToCoopWifi();
+                } catch (SSIDNotFoundException e) {
+                    Log.w(Constants.TAG, "SSID not found, add it again");
+
+                    PassabeneAccountManager passabeneAccountManager = new PassabeneAccountManager();
+                    PassabeneAccount account = passabeneAccountManager.getAccount(getBaseContext());
+
+                    coopWifiManager.addWifi(account.getUsername(), account.getPassword());
+
+                }
                 while(!connected) {
 
                     connected = passabeneService.isConnected();
@@ -85,24 +99,28 @@ public class SetupActivity extends ActionBarActivity {
                 }
 
                 final Intent res = new Intent();
+                data.putString("RESULT", "SUCCESS");
                 res.putExtras(data);
                 return res;
             }
 
             @Override
             protected void onPostExecute(Intent intent) {
+                if(intent.hasExtra("RESULT") && "SUCCESS".equals(intent.getStringExtra("RESULT"))) {
+                    if (intent.hasExtra(LOCATION_UNKNOWN)) {
+                        //show message, scan store barcode
+                    } else {
+                        Bundle bundle = new Bundle();
+                        Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
+                        setResult(RESULT_OK, mainIntent);
+                        bundle.putBoolean(MainActivity.SETUP_FINISHED, true);
+                        bundle.putBoolean(MainActivity.CATALOG_AVAILABLE, intent.getBooleanExtra(MainActivity.CATALOG_AVAILABLE, false));
+                        startActivity(mainIntent, bundle);
 
-                if (intent.hasExtra(LOCATION_UNKNOWN)) {
-                    //show message, scan store barcode
+                        finish();
+                    }
                 } else {
-                    Bundle bundle = new Bundle();
-                    Intent mainIntent = new Intent(getBaseContext(), MainActivity.class);
-                    setResult(RESULT_OK, mainIntent);
-                    bundle.putBoolean(MainActivity.SETUP_FINISHED, true);
-                    bundle.putBoolean(MainActivity.CATALOG_AVAILABLE, intent.getBooleanExtra(MainActivity.CATALOG_AVAILABLE, false));
-                    startActivity(mainIntent, bundle);
-
-                    finish();
+                    //TODO: restart startCheckConnection
                 }
             }
         }.execute();

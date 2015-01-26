@@ -78,20 +78,21 @@ public class MainActivity extends ActionBarActivity
             intent.putExtra(AuthenticatorActivity.ARG_START_FROM_APP, true);
             startActivityForResult(intent, LOGIN_INTENT_ID);
             finish();
+        } else {
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.container, itemFragment)
+                    .commit();
+
+            restoreActionBar();
+
+            if (!passabeneService.isReady()) {
+                Intent intent = new Intent(this, SetupActivity.class);
+                startActivityForResult(intent, SETUP_INTENT_ID);
+                finish();
+            }
+
         }
-
-
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, itemFragment)
-                .commit();
-
-        restoreActionBar();
-
-        if(!setup_finished) {
-            Intent intent = new Intent(this, SetupActivity.class);
-            startActivityForResult(intent, SETUP_INTENT_ID);
-        }
-
     }
 
     private void createSidebar() {
@@ -225,6 +226,7 @@ public class MainActivity extends ActionBarActivity
         //this.startActivityForResult(intent, BARCODE_INTENT_ID);
 
         Intent scanIntent = new Intent(this, ScanditActivity.class);
+        scanIntent.putExtra(Constants.SHOW_SHOPPINGCART, true);
         startActivityForResult(scanIntent, BARCODE_INTENT_ID);
 
     }

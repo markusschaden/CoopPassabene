@@ -6,4 +6,5 @@ package ch.avendia.passabene;
 public interface Constants {
     public static final String TAG = "Passaben";
     public final String FORMAT_TWO_DIGITS = "%.2f";
+    public final String SHOW_SHOPPINGCART = "SHOW_SHOPPINGCART";
 }

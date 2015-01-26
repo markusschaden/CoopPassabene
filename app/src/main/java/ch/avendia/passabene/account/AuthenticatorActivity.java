@@ -8,6 +8,7 @@ import android.accounts.Account;
 import android.accounts.AccountAuthenticatorActivity;
 import android.accounts.AccountManager;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import ch.avendia.passabene.Constants;
 import ch.avendia.passabene.CustomTypefaceSpan;
 import ch.avendia.passabene.MainActivity;
 import ch.avendia.passabene.R;
@@ -35,7 +37,9 @@ import ch.avendia.passabene.R;
  * It sends back to the Authenticator the result.
  */
 import ch.avendia.passabene.account.AccountGeneral.*;
+import ch.avendia.passabene.api.AddItemApiCall;
 import ch.avendia.passabene.api.PassabeneService;
+import ch.avendia.passabene.scandit.ScanditActivity;
 import ch.avendia.passabene.wifi.CoopWifiManager;
 
 public class AuthenticatorActivity extends AccountAuthenticatorActivity {
@@ -50,16 +54,16 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public final static String PARAM_USER_PASS = "USER_PASS";
 
+    private static final int BARCODE_INTENT_ID = 10;
+
     private final int REQ_SIGNUP = 1;
 
     private final String TAG = this.getClass().getSimpleName();
 
     private AccountManager mAccountManager;
     private String mAuthTokenType;
+    private TextView usernameTV;
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +74,8 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         mAuthTokenType = getIntent().getStringExtra(ARG_AUTH_TYPE);
         if (mAuthTokenType == null)
             mAuthTokenType = AccountGeneral.AUTHTOKEN_TYPE_FULL_ACCESS;
+
+        usernameTV = (TextView) findViewById(R.id.username);
 
         if (accountName != null) {
             ((TextView) findViewById(R.id.username)).setText(accountName);
@@ -92,7 +98,20 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             }
         });*/
 
+        findViewById(R.id.scan_supercard).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startScan();
+            }
+        });
+
         restoreActionBar();
+    }
+
+    private void startScan() {
+        Intent scanIntent = new Intent(this, ScanditActivity.class);
+        scanIntent.putExtra(Constants.SHOW_SHOPPINGCART, false);
+        startActivityForResult(scanIntent, BARCODE_INTENT_ID);
     }
 
     public void restoreActionBar() {
@@ -111,11 +130,20 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        // The sign up activity returned that the user has successfully created an account
-        if (requestCode == REQ_SIGNUP && resultCode == RESULT_OK) {
-            finishLogin(data);
-        } else
-            super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case (BARCODE_INTENT_ID): {
+                if (resultCode == Activity.RESULT_OK) {
+                    String barcode = data.getStringExtra(MainActivity.BARCODE_RESULT_DATA);
+                    usernameTV.setText(barcode);
+                }
+                break;
+            }
+            case (REQ_SIGNUP):
+                if (resultCode == Activity.RESULT_OK) {
+                    finishLogin(data);
+                }
+                break;
+        }
     }
 
     public void submit() {
@@ -203,12 +231,6 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
             }.execute();
 
         }
-
-
-
-
-
-
     }
 
     private void finishLogin(Intent intent) {

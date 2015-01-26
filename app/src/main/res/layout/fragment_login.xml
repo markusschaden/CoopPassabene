@@ -1,59 +1,81 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="ch.avendia.passabene.LoginFragment"
-    android:id="@+id/fragment_login">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_login"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ch.avendia.passabene.LoginFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/username_text"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="10dip">
+        android:text="Supercard Nummer"
+        android:textColor="#372c24" />
 
-        <!--  Email Label -->
-        <TextView android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#372c24"
-            android:text="Supercard Nummer"/>
-        <EditText android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dip"
-            android:layout_marginBottom="20dip"
-            android:singleLine="true"
-            android:id="@+id/username"
-            android:text="1234123412341"
-            />
-        <!--  Password Label -->
-        <TextView android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#372c24"
-            android:text="Geheimzahl"/>
-        <EditText android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dip"
-            android:singleLine="true"
-            android:password="true"
-            android:id="@+id/password"
-            android:inputType="numberPassword"
-            android:text="1234"/>
-        <!-- Login button -->
-        <Button android:id="@+id/btnLogin"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:text="Login"
-            android:textColor="#ffffff"
-            android:background="#5E8800"/>
-        <TextView android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#ff0000"
-            android:layout_marginTop="40dip"
-            android:textSize="20dip"
-            android:text="Fehler: "
-            android:visibility="invisible"/>
+    <EditText
+        android:id="@+id/username"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dip"
+        android:layout_marginTop="5dip"
+        android:singleLine="true"
+        android:text="1234123412341"
+        android:layout_below="@+id/username_text"/>
 
-        </LinearLayout>
-</FrameLayout>
+    <ImageButton
+        android:id="@+id/scan_supercard"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:scaleType="fitXY"
+        android:padding="0dp"
+        android:src="@drawable/barcode_ean"
+        android:layout_below="@+id/username_text"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"/>
+
+    <!--  Password Label -->
+    <TextView
+        android:id="@+id/password_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Geheimzahl"
+        android:textColor="#372c24"
+        android:layout_below="@id/username"/>
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dip"
+        android:inputType="numberPassword"
+        android:password="true"
+        android:singleLine="true"
+        android:text="1234"
+        android:layout_below="@id/password_text"/>
+    <!-- Login button -->
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dip"
+        android:background="#5E8800"
+        android:text="Login"
+        android:textColor="#ffffff"
+        android:layout_below="@id/password"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dip"
+        android:text="Fehler: "
+        android:textColor="#ff0000"
+        android:textSize="20dip"
+        android:visibility="invisible"
+        android:layout_below="@+id/btnLogin"/>
+
+</RelativeLayout>

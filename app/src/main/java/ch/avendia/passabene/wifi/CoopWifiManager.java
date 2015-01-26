@@ -10,6 +10,7 @@ import android.util.Log;
 import java.util.List;
 
 import ch.avendia.passabene.Constants;
+import ch.avendia.passabene.exception.SSIDNotFoundException;
 import ch.avendia.passabene.network.Sender;
 
 /**
@@ -72,7 +73,7 @@ public class CoopWifiManager {
 
     }
 
-    public void connectToCoopWifi() {
+    public void connectToCoopWifi() throws SSIDNotFoundException {
         wifiManager.setWifiEnabled(true);
 
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
@@ -84,7 +85,7 @@ public class CoopWifiManager {
                 WifiInfo currentWifi = wifiManager.getConnectionInfo();
                 if (currentWifi != null) {
                     if (currentWifi.getSSID() != null) {
-                        if ("5237 2614".equals(currentWifi.getSSID())) {
+                        if (("\"" + "5237 2614"+"\"").equals(currentWifi.getSSID())) {
                             break;
                         }
                     }
@@ -98,7 +99,7 @@ public class CoopWifiManager {
             }
         }
 
-        //TODO: add network to list again
+        throw new SSIDNotFoundException();
 
     }
 

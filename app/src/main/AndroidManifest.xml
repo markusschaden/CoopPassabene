@@ -55,7 +55,7 @@
         <activity
             android:name=".account.AuthenticatorActivity"
             android:label="passabene"
-            android:noHistory="true"
+
             android:excludeFromRecents="true"/>
 
         <activity
