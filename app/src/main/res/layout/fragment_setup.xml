@@ -51,6 +51,7 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/circle_1_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/circle_1"
@@ -94,6 +95,7 @@
             android:src="@drawable/barcode_qr"
             android:adjustViewBounds="true"
             android:layout_alignParentRight="true"
+            android:scaleType="fitXY"
             />
 
         <TextView
@@ -113,6 +115,7 @@
             android:textSize="18sp" />
 
         <TextView
+            android:id="@+id/circle_3_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/circle_3"
@@ -120,6 +123,17 @@
             android:paddingTop="15dp"
             android:text="Preparing Catalog" />
 
+
+
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/startShoppingButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Einkauf starten"
+        android:background="#ffc1c1c1"
+        android:textColor="#ffffff"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

@@ -34,6 +34,7 @@ public class MainActivity extends ActionBarActivity
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     public static final String BARCODE_RESULT_DATA = "barcode";
+    public static final String STORE_NUMER = "STORE_NUMBER";
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private static final int BARCODE_INTENT_ID = 10;
     private static final int SETUP_INTENT_ID = 11;

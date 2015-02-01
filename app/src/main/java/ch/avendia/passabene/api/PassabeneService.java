@@ -110,8 +110,10 @@ public class PassabeneService {
         DTO dto = executeWithResult(new GetStoreApiCall(lat, lon));
         if(dto != null) {
             return dto.getText();
+        } else {
+            return null;
         }
-        return "6258";
+        //return "6258";
         //return null;
     }
 

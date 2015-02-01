@@ -54,7 +54,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
 
         //String authtoken = "12324";
         //return authtoken;
-        if("12345".equals(pass)) {
+        if("8707".equals(pass)) {
             return "123456";
         } else {
             throw new Exception("invalid password");
@@ -66,7 +66,7 @@ public class ParseComServerAuthenticate implements ServerAuthenticate{
 
         Thread.sleep(3000);
 
-        if("1234".equals(pass)) {
+        if("8707".equals(pass)) {
             return "valid token";
         } else {
             throw new Exception("invalid password");
