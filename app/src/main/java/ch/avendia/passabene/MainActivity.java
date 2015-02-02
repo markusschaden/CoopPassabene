@@ -132,6 +132,7 @@ public class MainActivity extends ActionBarActivity
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
 
         Typeface coopRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopRg.ttf");
         Typeface coopExpRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopExpRg.ttf");
@@ -235,6 +236,12 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onItemClick(String id) {
 
+    }
+
+    @Override
+    public void onCounterClick() {
+        Intent finishIntent = new Intent(this, FinishActivity.class);
+        startActivity(finishIntent);
     }
 
     /**

@@ -2,9 +2,9 @@ package ch.avendia.passabene.api;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
-import java.io.IOException;
-
+import ch.avendia.passabene.Constants;
 import ch.avendia.passabene.PassabeneSettings;
 import ch.avendia.passabene.api.json.DTO;
 import ch.avendia.passabene.api.json.Item;
@@ -25,6 +25,8 @@ public class PassabeneService {
     private ShoppingCardHolder shoppingCardHolder = new ShoppingCardHolder();
     private boolean catalogAvailable = true;
     private boolean connected = false;
+    private String storeNumber;
+    private PassabeneWorkerThread passabeneWorkerThread;
 
     private PassabeneService() {
         //TODO: load from file
@@ -42,78 +44,106 @@ public class PassabeneService {
         return instance;
     }
 
-    public void execute(ApiCall apiCall) {
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+    public void execute(BasicApiCall apiCall) {
+        if(apiCall == null) {
+            return;
         }
+        //always blocking
+        DTO dto = apiCall.execute();
 
-        if(catalogAvailable && (apiCall instanceof AddItemApiCall || apiCall instanceof  DeleteItemApiCall)) {
-            //edit catalog direct, update over queue
-            if (apiCall instanceof AddItemApiCall) {
-                //TODO: add to queue
-                Item item = shoppingCardHolder.getItemFromBarcode(((AddItemApiCall)apiCall).getBarcode());
-                if(item != null) {
-                    item.setQuantity(item.getQuantity() + ((AddItemApiCall) apiCall).getQuantity());
-                } else {
-                    //lookup over sql
-                    Item newProduct = new Item("unknown product", 10000);
-                    shoppingCardHolder.addItem(newProduct);
-                }
-
-            } else if(apiCall instanceof DeleteItemApiCall) {
-                //TODO: add to queue
-                Item item = shoppingCardHolder.getItemFromBarcode(((DeleteItemApiCall)apiCall).getBarcode());
-                if(item.getQuantity() <= ((DeleteItemApiCall)apiCall).getQuantity()) {
-                    //delete item
-                    shoppingCardHolder.removeItem(item);
-                } else {
-                    //reduce quantity
-                    item.setQuantity(item.getQuantity()-((DeleteItemApiCall)apiCall).getQuantity());
-                }
-
-
+        if (apiCall instanceof StartSessionApiCall) {
+            if (dto != null && dto.getSession() != null) {
+                this.session = dto.getSession();
+                passabeneWorkerThread = new PassabeneWorkerThread(session);
+            } else {
+                Log.e(Constants.TAG, "StartSession was unsuccessful");
             }
+        } else {
+            Log.w(Constants.TAG, "unknown BasicApiCall type, " + apiCall.getClass().getSimpleName());
+            throw new RuntimeException("unknown BasicApiCall type, " + apiCall.getClass().getSimpleName());
+        }
+    }
 
+    public void execute(AdvancedApiCall apiCall) {
+
+        if(isNonBlockingAvailable(apiCall)) {
+            runNonBlockingExecute(apiCall);
 
         } else {
 
             DTO dto = apiCall.execute(session);
-
-            if (apiCall instanceof AddItemApiCall || apiCall instanceof DeleteItemApiCall) {
+            apiCall.doUpdate(dto, true);
+            /*if (apiCall instanceof AddItemApiCall || apiCall instanceof DeleteItemApiCall) {
                 if (dto != null && dto.getTicket() != null && dto.getTicket().getItems() != null) {
                     shoppingCardHolder.setShoppingCart(dto.getTicket().getItems());
                 } else {
                     shoppingCardHolder.getShoppingCart().add(new Item("test", 20000));
                 }
-            } else if (apiCall instanceof StartSessionApiCall) {
-                if (dto != null && dto.getSession() != null) {
-                    this.session = dto.getSession();
-                }
+
             } else if (apiCall instanceof EndSessionApiCall) {
                 if (dto != null) {
                     this.session = null;
+                    //todo: destroy passabeneWorkerThread correctly
+                } else {
+                    Log.e(Constants.TAG, "EndSession was unsuccessful");
                 }
 
-            }
+            }*/
         }
 
     }
 
+    private void runNonBlockingExecute(AdvancedApiCall apiCall) {
+        passabeneWorkerThread.addApiCallToQueue(apiCall);
+        if (apiCall instanceof AddItemApiCall) {
+
+            Item item = shoppingCardHolder.getLocalItemFromBarcode(((AddItemApiCall) apiCall).getBarcode());
+            if(item != null) {
+                item.setQuantity(item.getQuantity() + ((AddItemApiCall) apiCall).getQuantity());
+            } else {
+                //lookup over sql
+                Item newProduct = new Item("unknown product", 10000);
+                shoppingCardHolder.addLocalItem(newProduct);
+            }
+
+        } else if(apiCall instanceof DeleteItemApiCall) {
+
+            Item item = shoppingCardHolder.getLocalItemFromBarcode(((DeleteItemApiCall) apiCall).getBarcode());
+            if(item.getQuantity() <= ((DeleteItemApiCall)apiCall).getQuantity()) {
+                //delete item
+                shoppingCardHolder.removeLocalItem(item);
+            } else {
+                //reduce quantity
+                item.setQuantity(item.getQuantity()-((DeleteItemApiCall)apiCall).getQuantity());
+            }
+
+
+        }
+    }
+
+    private boolean isNonBlockingAvailable(ApiCall apiCall) {
+        if (passabeneWorkerThread != null && catalogAvailable && (apiCall instanceof AddItemApiCall || apiCall instanceof DeleteItemApiCall)) {
+            return true;
+        }
+        return false;
+    }
     public DTO executeWithResult(BasicApiCall apiCall) {
         return apiCall.execute();
     }
 
-    public String getStoreNumber(double lat, double lon) {
+    public String getStoreNumber() {
+        return storeNumber;
+    }
+
+    public String localizeStore(double lat, double lon) {
         DTO dto = executeWithResult(new GetStoreApiCall(lat, lon));
         if(dto != null) {
+            storeNumber = dto.getText();
             return dto.getText();
         } else {
-            return null;
+            //return null;
         }
-        //return "6258";
+        return "6258";
         //return null;
     }
 
@@ -145,5 +175,9 @@ public class PassabeneService {
     @Deprecated
     public void getStatusEx() {
 
+    }
+
+    public void setStoreNumber(String storeNumber) {
+        this.storeNumber = storeNumber;
     }
 }

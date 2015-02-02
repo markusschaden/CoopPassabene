@@ -12,9 +12,5 @@ import ch.avendia.passabene.shopping.ShoppingCardHolder;
  */
 public abstract class BasicApiCall extends ApiCall {
 
-    public DTO execute(Session session) {
-        throw new RuntimeException("operation not permitted");
-    }
-
     public abstract DTO execute();
 }

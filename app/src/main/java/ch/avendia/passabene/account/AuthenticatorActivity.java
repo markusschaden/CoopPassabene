@@ -116,6 +116,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
 
     public void restoreActionBar() {
         ActionBar actionBar = this.getActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
 
         Typeface coopRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopRg.ttf");
         Typeface coopExpRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopExpRg.ttf");

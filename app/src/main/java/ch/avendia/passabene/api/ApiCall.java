@@ -17,11 +17,10 @@ public abstract class ApiCall {
 
     protected Sender sender = new Sender();
     private static Gson gson  = new Gson();
-    protected ShoppingCardHolder shoppingCardHolder = new ShoppingCardHolder();
 
     public DTO stringToDTO(String  string) {
         return gson.fromJson(string, DTO.class);
     }
 
-    public abstract DTO execute(Session session);
+
 }

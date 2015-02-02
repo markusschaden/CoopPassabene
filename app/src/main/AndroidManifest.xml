@@ -26,7 +26,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_passabene"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <meta-data
@@ -42,7 +42,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".DetailitemActivity"
             android:label="@string/title_activity_detailitem"
@@ -50,14 +49,11 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ch.avendia.passabene.MainActivity" />
-
         </activity>
         <activity
             android:name=".account.AuthenticatorActivity"
-            android:label="passabene"
-
-            android:excludeFromRecents="true"/>
-
+            android:excludeFromRecents="true"
+            android:label="passabene" />
         <activity
             android:name=".scandit.ScanditActivity"
             android:label="passabene" />
@@ -75,6 +71,10 @@
         <activity
             android:name=".SetupActivity"
             android:label="@string/title_activity_setup" >
+        </activity>
+        <activity
+            android:name=".FinishActivity"
+            android:label="@string/title_activity_finish" >
         </activity>
     </application>
 

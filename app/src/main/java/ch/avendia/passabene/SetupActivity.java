@@ -39,11 +39,7 @@ public class SetupActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setup);
 
-
-        WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-        GpsProvider gpsProvider = new GpsProvider(getBaseContext());
         fragment = new PlaceholderFragment();
-        fragment.start(wifi, gpsProvider);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.container, fragment)
@@ -56,6 +52,7 @@ public class SetupActivity extends ActionBarActivity {
 
     public void restoreActionBar() {
         android.app.ActionBar actionBar = this.getActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
 
         Typeface coopRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopRg.ttf");
         Typeface coopExpRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopExpRg.ttf");
@@ -93,14 +90,6 @@ public class SetupActivity extends ActionBarActivity {
         private PassabeneService passabeneService;
         private GpsProvider gpsProvider;
 
-        public void start(WifiManager wifi, GpsProvider gpsProvider) {
-            this.gpsProvider = gpsProvider;
-
-            coopWifiManager = new CoopWifiManager(wifi);
-            passabeneService = PassabeneService.getInstance();
-
-        }
-
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
@@ -114,6 +103,12 @@ public class SetupActivity extends ActionBarActivity {
             circle_1 = (TextView) rootView.findViewById(R.id.circle_1);
             qr_image = (ImageView) rootView.findViewById(R.id.qr_image);
             startShoppingButton = (Button) rootView.findViewById(R.id.startShoppingButton);
+
+            WifiManager wifi = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+            this.gpsProvider = new GpsProvider(getActivity());
+            coopWifiManager = new CoopWifiManager(wifi);
+            passabeneService = PassabeneService.getInstance();
+
 
             disableAllSteps();
             startChecks();
@@ -130,6 +125,7 @@ public class SetupActivity extends ActionBarActivity {
                         String barcode = data.getStringExtra(BARCODE_RESULT_DATA);
                         if (barcode != null && barcode.startsWith("StoreNumber=")) {
                             storeNumber = barcode.split("=")[1];
+                            passabeneService.setStoreNumber(storeNumber);
                             startChecks();
                         }
                     }
@@ -172,7 +168,7 @@ public class SetupActivity extends ActionBarActivity {
         private void enableStartShoppingButton() {
             circle_3.setBackgroundResource(R.drawable.circle_filled);
             circle_3.setTextColor(Color.WHITE);
-            startShoppingButton.setBackgroundColor(0xFF5E8800);
+            startShoppingButton.setBackgroundColor(0xFF99C13C);
             startShoppingButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -316,7 +312,7 @@ public class SetupActivity extends ActionBarActivity {
 
                     Location location = gpsProvider.getLastBestLocation();
                     if (location != null) {
-                        storeNumber = passabeneService.getStoreNumber(location.getLatitude(), location.getLongitude());
+                        storeNumber = passabeneService.localizeStore(location.getLatitude(), location.getLongitude());
                     }
 
                     final Intent res = new Intent();

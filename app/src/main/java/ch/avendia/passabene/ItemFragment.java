@@ -149,6 +149,14 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
             }
         });
 
+        Button buttonCounterClick = (Button) view.findViewById(R.id.buttonToCounter);
+        buttonCounterClick.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onCounterClick();
+            }
+        });
+
 
         return view;
     }
@@ -210,8 +218,8 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
      */
     public interface ItemFragmentListener {
         public void onScanClick();
-
         public void onItemClick(String id);
+        public void onCounterClick();
     }
 
 }

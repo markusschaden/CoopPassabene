@@ -77,6 +77,7 @@ public class ScanditActivity extends Activity implements ScanditSDKListener {
 
     public void restoreActionBar() {
         ActionBar actionBar = this.getActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
 
         Typeface coopRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopRg.ttf");
         Typeface coopExpRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopExpRg.ttf");
@@ -124,13 +125,18 @@ public class ScanditActivity extends Activity implements ScanditSDKListener {
                     this, sScanditSdkAppKey, ScanditSDKAutoAdjustingBarcodePicker.CAMERA_FACING_BACK);
 
 
+
         RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.scanner_fragment);
         mainLayout.addView(picker);
 
         Bundle extras = getIntent().getExtras();
         RelativeLayout r = (RelativeLayout)findViewById(R.id.bottomBar);
-        if(extras.getBoolean(Constants.SHOW_SHOPPINGCART, false)) {
-            r.setVisibility(View.VISIBLE);
+        if(extras != null) {
+            if (extras.getBoolean(Constants.SHOW_SHOPPINGCART, false)) {
+                r.setVisibility(View.VISIBLE);
+            } else {
+                r.setVisibility(View.GONE);
+            }
         } else {
             r.setVisibility(View.GONE);
         }
@@ -152,9 +158,9 @@ public class ScanditActivity extends Activity implements ScanditSDKListener {
         // Register listener, in order to be notified about relevant events 
         // (e.g. a successfully scanned bar code).
         mBarcodePicker.getOverlayView().addListener(this);
-        
-        // Show a search bar in the scan user interface.
-        mBarcodePicker.getOverlayView().showSearchBar(true);
+        mBarcodePicker.getOverlayView().setVibrateEnabled(true);
+
+
     }
 
     /** 

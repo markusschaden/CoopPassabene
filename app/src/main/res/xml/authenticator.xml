@@ -3,6 +3,6 @@
 <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
     android:accountType="ch.avendia.passabene.account"
     android:label="@string/account_name"
-    android:icon="@drawable/ic_udinic"
-    android:smallIcon="@drawable/ic_udinic"
+    android:icon="@drawable/ic_passabene"
+    android:smallIcon="@drawable/ic_passabene"
     />

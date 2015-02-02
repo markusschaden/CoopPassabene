@@ -7,7 +7,7 @@ import ch.avendia.passabene.api.json.Session;
 /**
  * Created by Markus on 22.01.2015.
  */
-public class StartSessionApiCall extends ApiCall {
+public class StartSessionApiCall extends BasicApiCall {
 
     private String username;
     private String storeNumber;
@@ -20,10 +20,7 @@ public class StartSessionApiCall extends ApiCall {
     }
 
     @Override
-    public DTO execute(Session session) {
-        if(session != null) {
-            return null;
-        }
+    public DTO execute() {
 
         String url = "StartSessionEx?cardNumber="+username+"&storeNumber="+storeNumber+"&language="+language.toString()+"&sdkVersion=2.5.2.4&originType=iPhone";
 

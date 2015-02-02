@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/circle_1"
             android:layout_toRightOf="@+id/circle_1"
-            android:paddingTop="15dp"
+            android:paddingTop="16dp"
             android:text="Connecting to Wifi Passabene" />
 
         <TextView
@@ -83,7 +83,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/circle_2"
             android:layout_toRightOf="@+id/circle_2"
-            android:paddingTop="15dp"
+            android:paddingTop="16dp"
             android:text="Locating Store..." />
 
         <ImageView
@@ -120,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/circle_3"
             android:layout_toRightOf="@+id/circle_3"
-            android:paddingTop="15dp"
+            android:paddingTop="16dp"
             android:text="Preparing Catalog" />
 
 

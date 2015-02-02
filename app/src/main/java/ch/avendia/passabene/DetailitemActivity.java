@@ -55,6 +55,7 @@ public class DetailitemActivity extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(false);
 
         SpannableString s = new SpannableString("passabene");
         s.setSpan(new CustomTypefaceSpan(this, "CoopExpRg.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -210,7 +211,7 @@ public class DetailitemActivity extends ActionBarActivity {
 
 
         public void showItem() {
-            sci = shoppingCardHolder.getItemFromId(itemId);
+            sci = shoppingCardHolder.getLocalItemFromId(itemId);
 
             itemDetail.setText(sci.getDescription());
             itemTotalPrice.setText(String.format(Constants.FORMAT_TWO_DIGITS, sci.getQuantity() * sci.getPrice() / 100.0));

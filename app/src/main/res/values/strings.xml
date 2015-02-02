@@ -31,5 +31,6 @@
     <string name="ok_button">OK</string>
     <string name="cancel_button">Cancel</string>
     <string name="title_activity_setup">SetupActivity</string>
+    <string name="title_activity_finish">FinishActivity</string>
 
 </resources>
