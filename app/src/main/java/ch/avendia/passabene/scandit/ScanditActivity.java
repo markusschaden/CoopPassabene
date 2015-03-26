@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.Display;
@@ -46,7 +48,7 @@ import ch.avendia.passabene.shopping.ShoppingCardHolder;
  * See the License for the specific language governing premissions and
  * limitations under the License.
  */
-public class ScanditActivity extends Activity implements ScanditSDKListener {
+public class ScanditActivity extends ActionBarActivity implements ScanditSDKListener {
 
     // The main object for recognizing a displaying barcodes.
     private ScanditSDK mBarcodePicker;
@@ -63,7 +65,7 @@ public class ScanditActivity extends Activity implements ScanditSDKListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        restoreActionBar();
+        //restoreActionBar();
 
         // Initialize and start the bar code recognition.
         initializeAndStartBarcodeScanning();
@@ -76,16 +78,12 @@ public class ScanditActivity extends Activity implements ScanditSDKListener {
     }
 
     public void restoreActionBar() {
-        ActionBar actionBar = this.getActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
 
-        Typeface coopRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopRg.ttf");
-        Typeface coopExpRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopExpRg.ttf");
-
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         SpannableString s = new SpannableString(getString(R.string.title_activity_main));
         s.setSpan(new CustomTypefaceSpan(this, "CoopExpRg.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        actionBar.setTitle(s);
+        toolbar.setTitle(s);
+        setSupportActionBar(toolbar);
     }
 
 
@@ -160,7 +158,7 @@ public class ScanditActivity extends Activity implements ScanditSDKListener {
         mBarcodePicker.getOverlayView().addListener(this);
         mBarcodePicker.getOverlayView().setVibrateEnabled(true);
 
-
+        restoreActionBar();
     }
 
     /** 

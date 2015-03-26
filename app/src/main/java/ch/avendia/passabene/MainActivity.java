@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.mikepenz.materialdrawer.Drawer;
+
 import ch.avendia.passabene.account.AccountGeneral;
 import ch.avendia.passabene.account.AuthenticatorActivity;
 import ch.avendia.passabene.account.PassabeneAccount;
@@ -27,15 +29,13 @@ import ch.avendia.passabene.api.PassabeneService;
 import ch.avendia.passabene.scandit.ScanditActivity;
 
 
-public class MainActivity extends ActionBarActivity
-        implements NavigationDrawerFragment.NavigationDrawerCallbacks, ItemFragment.ItemFragmentListener {
+public class MainActivity extends ActionBarActivity implements ItemFragment.ItemFragmentListener {
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     public static final String BARCODE_RESULT_DATA = "barcode";
     public static final String STORE_NUMER = "STORE_NUMBER";
-    private NavigationDrawerFragment mNavigationDrawerFragment;
     private static final int BARCODE_INTENT_ID = 10;
     private static final int SETUP_INTENT_ID = 11;
     private static final int LOGIN_INTENT_ID = 120;
@@ -59,8 +59,14 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        new Drawer()
+                .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(false)
+                .addDrawerItems(
+                        //pass your items here
+                )
+                .build();
 
         passabeneService = passabeneService.getInstance();
 
@@ -85,7 +91,7 @@ public class MainActivity extends ActionBarActivity
                     .replace(R.id.container, itemFragment)
                     .commit();
 
-            restoreActionBar();
+            //restoreActionBar();
 
             if (!passabeneService.isReady()) {
                 Intent intent = new Intent(this, SetupActivity.class);
@@ -96,37 +102,6 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    private void createSidebar() {
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-
-        //mNavigationDrawerFragment.setMenuVisibility(false);
-    }
-
-    @Override
-    public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
-    }
-
-    public void onSectionAttached(int number) {
-        /*switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }*/
-    }
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
@@ -149,19 +124,6 @@ public class MainActivity extends ActionBarActivity
         super.onResume();
 
         itemFragment.refresh();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -276,12 +238,6 @@ public class MainActivity extends ActionBarActivity
             return rootView;
         }
 
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((MainActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
     }
 
 

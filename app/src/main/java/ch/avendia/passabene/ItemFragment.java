@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +46,8 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
     private ItemFragmentListener mListener;
     private double totalPrice = 0;
     private int totalQuantity = 0;
+
+    private View view;
 
     /**
      * The fragment's ListView/GridView.
@@ -86,6 +92,26 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
     }
 
 
+
+    public void restoreActionBar() {
+
+        // Handle Toolbar
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+
+
+        //android.app.ActionBar actionBar = this.getActionBar();
+        //actionBar.setDisplayShowHomeEnabled(false);
+
+        SpannableString s = new SpannableString(getString(R.string.title_activity_main));
+        s.setSpan(new CustomTypefaceSpan(getActivity(), "CoopExpRg.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        toolbar.setTitle(s);
+
+        ActionBarActivity activity = (ActionBarActivity) getActivity();
+        activity.setSupportActionBar(toolbar);
+    }
+
+
     /*public void addBarcode(String barcode) {
 
         items.add(new Item(new Product(barcode, 90.50)));
@@ -126,7 +152,7 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item, container, false);
+        view = inflater.inflate(R.layout.fragment_item, container, false);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -157,6 +183,7 @@ public class ItemFragment extends Fragment implements AbsListView.OnItemClickLis
             }
         });
 
+        restoreActionBar();
 
         return view;
     }

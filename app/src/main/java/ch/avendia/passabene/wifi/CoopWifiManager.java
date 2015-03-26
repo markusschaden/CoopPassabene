@@ -18,7 +18,7 @@ import ch.avendia.passabene.network.Sender;
  */
 public class CoopWifiManager {
 
-    public final static String SSID_PASSABENE = "passabene";
+    public final static String SSID_PASSABENE = "HSR-Secure"; //"passabene";
 
     private WifiManager wifiManager;
 
@@ -79,13 +79,13 @@ public class CoopWifiManager {
         List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
         for (WifiConfiguration i : list) {
             Log.i(Constants.TAG, i.SSID);
-            if (i.SSID != null && i.SSID.equals("\"" + "5237 2614" + "\"")) {
-                //if(i.SSID != null && i.SSID.equals("\"" + SSID_PASSABENE + "\"")) {
+            //if (i.SSID != null && i.SSID.equals("\"" + "5237 2614" + "\"")) {
+            if(i.SSID != null && i.SSID.equals("\"" + SSID_PASSABENE + "\"")) {
                 //only if not right network
                 WifiInfo currentWifi = wifiManager.getConnectionInfo();
                 if (currentWifi != null) {
                     if (currentWifi.getSSID() != null) {
-                        if (("\"" + "5237 2614"+"\"").equals(currentWifi.getSSID())) {
+                        if (("\"" + SSID_PASSABENE+"\"").equals(currentWifi.getSSID())) {
                             break;
                         }
                     }

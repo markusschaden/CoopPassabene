@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.Log;
@@ -21,9 +22,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mikepenz.materialdrawer.Drawer;
+
 import ch.avendia.passabene.account.PassabeneAccount;
 import ch.avendia.passabene.account.PassabeneAccountManager;
 import ch.avendia.passabene.api.PassabeneService;
+import ch.avendia.passabene.api.StartSessionApiCall;
 import ch.avendia.passabene.exception.SSIDNotFoundException;
 import ch.avendia.passabene.gps.GpsProvider;
 import ch.avendia.passabene.scandit.ScanditActivity;
@@ -46,13 +50,28 @@ public class SetupActivity extends ActionBarActivity {
                     .commit();
         }
 
-        restoreActionBar();
+        new Drawer()
+                .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(false)
+                .addDrawerItems(
+                        //pass your items here
+                )
+                .build();
+
+
+        //restoreActionBar();
     }
 
 
     public void restoreActionBar() {
-        android.app.ActionBar actionBar = this.getActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
+
+        // Handle Toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        //android.app.ActionBar actionBar = this.getActionBar();
+        //actionBar.setDisplayShowHomeEnabled(false);
 
         Typeface coopRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopRg.ttf");
         Typeface coopExpRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopExpRg.ttf");
@@ -60,7 +79,7 @@ public class SetupActivity extends ActionBarActivity {
         SpannableString s = new SpannableString(getString(R.string.title_activity_main));
         s.setSpan(new CustomTypefaceSpan(this, "CoopExpRg.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        actionBar.setTitle(s);
+        toolbar.setTitle(s);
     }
 
 
@@ -89,11 +108,12 @@ public class SetupActivity extends ActionBarActivity {
         private CoopWifiManager coopWifiManager;
         private PassabeneService passabeneService;
         private GpsProvider gpsProvider;
+        private View rootView;
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_setup, container, false);
+            rootView = inflater.inflate(R.layout.fragment_setup, container, false);
 
             circle_1_text = (TextView) rootView.findViewById(R.id.circle_1_text);
             circle_2_text = (TextView) rootView.findViewById(R.id.circle_2_text);
@@ -109,11 +129,30 @@ public class SetupActivity extends ActionBarActivity {
             coopWifiManager = new CoopWifiManager(wifi);
             passabeneService = PassabeneService.getInstance();
 
+            restoreActionBar();
 
             disableAllSteps();
             startChecks();
 
             return rootView;
+        }
+
+        public void restoreActionBar() {
+
+            // Handle Toolbar
+            Toolbar toolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
+
+
+            //android.app.ActionBar actionBar = this.getActionBar();
+            //actionBar.setDisplayShowHomeEnabled(false);
+
+            SpannableString s = new SpannableString(getString(R.string.title_activity_main));
+            s.setSpan(new CustomTypefaceSpan(getActivity(), "CoopExpRg.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            toolbar.setTitle(s);
+
+            ActionBarActivity activity = (ActionBarActivity) getActivity();
+            activity.setSupportActionBar(toolbar);
         }
 
         @Override
@@ -210,7 +249,8 @@ public class SetupActivity extends ActionBarActivity {
                     } else {
                         qr_image.setVisibility(View.GONE);
                         activateStep2();
-                        checkCatalog();
+                        startSession();
+
                     }
                     break;
 
@@ -237,6 +277,17 @@ public class SetupActivity extends ActionBarActivity {
             });
         }
 
+
+        private void startSession() {
+            new Thread() {
+                @Override
+                public void run() {
+                    passabeneService.startSession(getActivity().getBaseContext());
+
+                    checkCatalog();
+                }
+            }.start();
+        }
 
 
         private void setupWifi() {

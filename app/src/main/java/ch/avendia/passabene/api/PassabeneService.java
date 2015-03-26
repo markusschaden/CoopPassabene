@@ -5,7 +5,11 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import ch.avendia.passabene.Constants;
+import ch.avendia.passabene.Language;
+import ch.avendia.passabene.MainActivity;
 import ch.avendia.passabene.PassabeneSettings;
+import ch.avendia.passabene.account.PassabeneAccount;
+import ch.avendia.passabene.account.PassabeneAccountManager;
 import ch.avendia.passabene.api.json.DTO;
 import ch.avendia.passabene.api.json.Item;
 import ch.avendia.passabene.api.json.Session;
@@ -153,7 +157,7 @@ public class PassabeneService {
     }
 
     public boolean isConnected() {
-        connected=!TextUtils.equals(null, new Sender().sendGet("http://www.avendia.ch"));
+        connected=!TextUtils.equals(null, new Sender().sendGet("http://www.markus.cc"));
         return connected;
     }
 
@@ -179,5 +183,13 @@ public class PassabeneService {
 
     public void setStoreNumber(String storeNumber) {
         this.storeNumber = storeNumber;
+    }
+
+    public void startSession(Context context) {
+        PassabeneAccountManager passabeneAccountManager = new PassabeneAccountManager();
+        PassabeneAccount account = passabeneAccountManager.getAccount(context);
+
+        StartSessionApiCall startSessionApiCall = new StartSessionApiCall(account.getUsername(), storeNumber, Language.DE);
+        execute(startSessionApiCall);
     }
 }

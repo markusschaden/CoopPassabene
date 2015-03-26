@@ -16,6 +16,7 @@ import android.graphics.Typeface;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -115,8 +116,12 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
     }
 
     public void restoreActionBar() {
-        ActionBar actionBar = this.getActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
+//        ActionBar actionBar = this.getActionBar();
+//      actionBar.setDisplayShowHomeEnabled(false);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+        //setSupportActionBar(toolbar);
+        //this.setActionBar(toolbar);
 
         Typeface coopRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopRg.ttf");
         Typeface coopExpRgFont = Typeface.createFromAsset(getAssets(), "fonts/CoopExpRg.ttf");
@@ -124,7 +129,7 @@ public class AuthenticatorActivity extends AccountAuthenticatorActivity {
         SpannableString s = new SpannableString(getString(R.string.title_activity_main));
         s.setSpan(new CustomTypefaceSpan(this, "CoopExpRg.ttf"), 0, s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        actionBar.setTitle(s);
+//        toolbar.setTitle(s);
     }
 
 
